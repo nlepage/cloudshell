@@ -1,11 +1,11 @@
 package main
 
 import (
-	"cloudshell/internal/log"
 	"fmt"
 	"strings"
 
 	"github.com/usvc/go-config"
+	"github.com/zephinzer/cloudshell/internal/log"
 )
 
 var conf = config.Map{

@@ -1,4 +1,4 @@
-module cloudshell
+module github.com/zephinzer/cloudshell
 
 go 1.16
 

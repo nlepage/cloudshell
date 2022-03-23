@@ -1,8 +1,6 @@
 package main
 
 import (
-	"cloudshell/internal/log"
-	"cloudshell/pkg/xtermjs"
 	"errors"
 	"fmt"
 	"net/http"
@@ -14,6 +12,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
+	"github.com/zephinzer/cloudshell/internal/log"
+	"github.com/zephinzer/cloudshell/pkg/xtermjs"
 )
 
 var VersionInfo string

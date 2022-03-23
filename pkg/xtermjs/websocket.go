@@ -2,7 +2,6 @@ package xtermjs
 
 import (
 	"bytes"
-	"cloudshell/internal/log"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"github.com/creack/pty"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/zephinzer/cloudshell/internal/log"
 )
 
 const DefaultConnectionErrorLimit = 10
