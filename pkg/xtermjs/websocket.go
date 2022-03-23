@@ -17,7 +17,10 @@ import (
 	"github.com/zephinzer/cloudshell/internal/log"
 )
 
-const DefaultConnectionErrorLimit = 10
+const (
+	DefaultConnectionErrorLimit = 10
+	DefaultMaxBufferSizeBytes   = 512
+)
 
 type HandlerOpts struct {
 	// AllowedHostnames is a list of strings which will be matched to the client
@@ -47,6 +50,9 @@ func websocketHandler(opts HandlerOpts) func(http.ResponseWriter, *http.Request)
 			connectionErrorLimit = DefaultConnectionErrorLimit
 		}
 		maxBufferSizeBytes := opts.MaxBufferSizeBytes
+		if maxBufferSizeBytes == 0 {
+			maxBufferSizeBytes = DefaultMaxBufferSizeBytes
+		}
 		keepalivePingTimeout := opts.KeepalivePingTimeout
 		if keepalivePingTimeout <= time.Second {
 			keepalivePingTimeout = 20 * time.Second
