@@ -15,8 +15,10 @@ const terminal = new Terminal({
   cols: 128,
 });
 terminal.open(document.getElementById("terminal"));
-const protocol = location.protocol === "https:" ? "wss://" : "ws://";
-const url = protocol + location.host + "/xterm.js";
+const url = new URL(location);
+url.protocol = location.protocol === "https:" ? "wss:" : "ws:";
+if (!url.pathname.endsWith("/")) url.pathname += "/";
+url.pathname += "attach";
 const ws = new WebSocket(url);
 const attachAddon = new AttachAddon(ws);
 var fitAddon = new FitAddon();

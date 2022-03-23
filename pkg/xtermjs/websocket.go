@@ -40,7 +40,7 @@ type HandlerOpts struct {
 	MaxBufferSizeBytes   int
 }
 
-func GetHandler(opts HandlerOpts) func(http.ResponseWriter, *http.Request) {
+func websocketHandler(opts HandlerOpts) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		connectionErrorLimit := opts.ConnectionErrorLimit
 		if connectionErrorLimit < 0 {

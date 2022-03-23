@@ -2,9 +2,17 @@
   "name": "cloudshell",
   "version": "1.0.0",
   "private": true,
-  "source": "public/index.html",
+  "targets": {
+    "default": {
+      "source": "public/index.html",
+      "distDir": "pkg/xtermjs/site",
+      "publicUrl": "."
+    }
+  },
   "scripts": {
-    "build": "parcel build"
+    "prebuild": "npm run clean",
+    "build": "parcel build",
+    "clean": "rm -rf pkg/xtermjs/site"
   },
   "author": "Joseph Matthias Goh (@zephinzer)",
   "dependencies": {

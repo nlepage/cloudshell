@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -79,21 +78,6 @@ func runE(_ *cobra.Command, _ []string) error {
 	// configure routing
 	router := mux.NewRouter()
 
-	// this is the endpoint for xterm.js to connect to
-	xtermjsHandlerOptions := xtermjs.HandlerOpts{
-		AllowedHostnames:     allowedHostnames,
-		Arguments:            arguments,
-		Command:              command,
-		ConnectionErrorLimit: connectionErrorLimit,
-		CreateLogger: func(connectionUUID string, r *http.Request) xtermjs.Logger {
-			createRequestLog(r, map[string]interface{}{"connection_uuid": connectionUUID}).Infof("created logger for connection '%s'", connectionUUID)
-			return createRequestLog(nil, map[string]interface{}{"connection_uuid": connectionUUID})
-		},
-		KeepalivePingTimeout: keepalivePingTimeout,
-		MaxBufferSizeBytes:   maxBufferSizeBytes,
-	}
-	router.HandleFunc(pathXTermJS, xtermjs.GetHandler(xtermjsHandlerOptions))
-
 	// readiness probe endpoint
 	router.HandleFunc(pathReadiness, func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -115,9 +99,24 @@ func runE(_ *cobra.Command, _ []string) error {
 		w.Write([]byte(VersionInfo))
 	})
 
-	// this is the endpoint for the root path aka website
-	distDirectory := filepath.Join(workingDirectory, "./dist")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(distDirectory)))
+	// this is the endpoint for the root path aka website and xterm.js to connect to
+	xtermjsHandlerOptions := xtermjs.HandlerOpts{
+		AllowedHostnames:     allowedHostnames,
+		Arguments:            arguments,
+		Command:              command,
+		ConnectionErrorLimit: connectionErrorLimit,
+		CreateLogger: func(connectionUUID string, r *http.Request) xtermjs.Logger {
+			createRequestLog(r, map[string]interface{}{"connection_uuid": connectionUUID}).Infof("created logger for connection '%s'", connectionUUID)
+			return createRequestLog(nil, map[string]interface{}{"connection_uuid": connectionUUID})
+		},
+		KeepalivePingTimeout: keepalivePingTimeout,
+		MaxBufferSizeBytes:   maxBufferSizeBytes,
+	}
+	xtermjsHandler, err := xtermjs.Handler(xtermjsHandlerOptions)
+	if err != nil {
+		return err
+	}
+	router.PathPrefix(pathXTermJS).Handler(http.StripPrefix(pathXTermJS, xtermjsHandler))
 
 	// start memory logging pulse
 	logWithMemory := createMemoryLog()

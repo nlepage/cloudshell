@@ -37,6 +37,7 @@ run: package
 
 # builds the application binary
 build:
+	npm run build
 	CGO_ENABLED=0 \
 	go build -a -v \
 		-ldflags " \

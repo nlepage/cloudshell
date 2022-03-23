@@ -60,8 +60,8 @@ var conf = config.Map{
 		Usage:   "url path to the readiness probe endpoint",
 	},
 	"path-xtermjs": &config.String{
-		Default: "/xterm.js",
-		Usage:   "url path to the endpoint that xterm.js should attach to",
+		Default: "",
+		Usage:   "url path to the xterm.js site endpoint",
 	},
 	"server-addr": &config.String{
 		Default:   "0.0.0.0",
