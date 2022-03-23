@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -114,13 +115,9 @@ func runE(_ *cobra.Command, _ []string) error {
 		w.Write([]byte(VersionInfo))
 	})
 
-	// this is the endpoint for serving xterm.js assets
-	depenenciesDirectory := path.Join(workingDirectory, "./node_modules")
-	router.PathPrefix("/assets").Handler(http.StripPrefix("/assets", http.FileServer(http.Dir(depenenciesDirectory))))
-
 	// this is the endpoint for the root path aka website
-	publicAssetsDirectory := path.Join(workingDirectory, "./public")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(publicAssetsDirectory)))
+	distDirectory := filepath.Join(workingDirectory, "./dist")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir(distDirectory)))
 
 	// start memory logging pulse
 	logWithMemory := createMemoryLog()

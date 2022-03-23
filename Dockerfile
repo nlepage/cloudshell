@@ -17,18 +17,19 @@ RUN go build -a -v \
   -o ./bin/cloudshell \
   ./cmd/cloudshell
 
-FROM node:16.0.0-alpine AS frontend
+FROM node:16-alpine AS frontend
 WORKDIR /app
 COPY ./package.json .
 COPY ./package-lock.json .
-RUN npm install
+COPY ./public ./public
+RUN npm ci
+RUN npm run build
 
 FROM alpine:3.14.0
 WORKDIR /app
 RUN apk add --no-cache bash ncurses
 COPY --from=backend /go/src/cloudshell/bin/cloudshell /app/cloudshell
-COPY --from=frontend /app/node_modules /app/node_modules
-COPY ./public /app/public
+COPY --from=frontend /app/dist /app/dist
 RUN ln -s /app/cloudshell /usr/bin/cloudshell
 RUN adduser -D -u 1000 user
 RUN mkdir -p /home/user

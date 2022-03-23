@@ -11,5 +11,7 @@ vendor
 Makefile.properties
 
 # build artifacts
+.parcel-cache
 bin
+dist
 trivy.json

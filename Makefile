@@ -28,6 +28,7 @@ init:
 
 # start the application (use this in development)
 start:
+	npm run build
 	go run ./cmd/cloudshell
 
 # runs the application in packaged form
